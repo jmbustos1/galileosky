@@ -1,10 +1,40 @@
 import socket
 import datetime
-
+import asyncio
+from galileopass.server import create_server
 HOST = "0.0.0.0"  # Standard loopback interface address (localhost)
 PORT = 2424  # Port to listen on (non-privileged ports are > 1023)
 
-with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+
+"""
+    ruptela dev server
+
+    https://docs.python.org/3/library/asyncio-stream.html#asyncio.start_server
+"""
+
+
+
+async def main():
+    """
+    TCP server using streams.
+    """
+
+    server = await asyncio.start_server(create_server, "0.0.0.0", 2424)
+
+    async with server:
+        await server.serve_forever()
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
+
+
+
+
+
+
+
+""" with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     s.bind((HOST, PORT))
     s.listen()
     print("server listening ...")
@@ -27,4 +57,4 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             confirmation_header = b'\x02'
             confirmation_pack = confirmation_header + pack_checksum
             print(f"    confirmation: {confirmation_pack}\n")
-            client.sendall(confirmation_pack)
+            client.sendall(confirmation_pack) """
