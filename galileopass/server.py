@@ -63,7 +63,27 @@ class GalileoServer:  # pylint: disable=too-many-instance-attributes
         #self.consumer = RuptelaConsumer(self)
 
         print("rs<__init__:%d", id(self))
-        
+    async def __call__(self):
+        """
+        call
+        """
+        self.peername = self.writer.get_extra_info("peername")
+        logging.debug("rs>__call__:%s:%d", self.peername, id(self))
+
+        self._connection_made()
+
+        consumer_task = asyncio.create_task(self.consumer())
+        received_task = asyncio.create_task(self.data_received())
+
+        await asyncio.gather(received_task, consumer_task)
+
+        for task in self.tasks_list:
+            await task
+
+        print("rs<__call__:%s:%d", self.peername, id(self))
+
+
+
     def _connection_made(self):
         """
         This method log the connection made from client.
@@ -79,4 +99,55 @@ class GalileoServer:  # pylint: disable=too-many-instance-attributes
         print("rs<_connection_made:%s:%d", self.peername, id(self))
 
 
+
+    async def data_received(self):
+        """
+        This method receives and parser the data sent by clients
+        """
+        self.peername = self.writer.get_extra_info("peername")
+        print("rs>data_received:%s:%d", self.peername, id(self))
+
+        imei = None
+        imei_group_datetime = datetime.utcnow() - timedelta(minutes=15)
+        try:
+            while self.connection_state == "connected":
+                print("rs>...0...data_received:%d", id(self))
+                data = b""
+                try:
+                    data_with_timeout = await asyncio.wait_for(
+                        self.reader.read(1024), timeout=5
+                    )
+                except asyncio.TimeoutError:
+                    pass
+                else:
+                    data += data_with_timeout
+                print("rs>...1...data_received:%d", id(self))
+
+                self.buffer += data
+                check_data = await self._check_data()
+
+                if data and check_data:
+                    await asyncio.create_task(
+                        print(self.buffer)
+                    )
+        except:
+            pass
+    
+    async def _check_data(self) -> bool:
+        return True
+
+    async def _response_ack(self) -> None:
+        """
+        This method responds to the client with an acknowledge command.
+        """
+        self.peername = self.writer.get_extra_info("peername")
+        print("rs>_response_ack:%s:%d", self.peername, id(self))
+
+        # Command to response acknowledgment for extended protocol
+        pack_checksum = self.buffer[-2:]
+        confirmation_header = b'\x02'
+        confirmation_pack = confirmation_header + pack_checksum
+
+        self.writer.write(confirmation_pack)
+        await self.writer.drain()
 
