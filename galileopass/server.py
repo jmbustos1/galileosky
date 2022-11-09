@@ -72,7 +72,7 @@ class GalileoServer:  # pylint: disable=too-many-instance-attributes
         print("rs>_connection_made:%s:%d", self.peername, id(self))
 
         self.connection_state = "connected"
-        logging.info(
+        print(
             "Connection from %s with %d", self.peername, id(self.consumer)
         )
 
