@@ -62,21 +62,21 @@ class GalileoServer:  # pylint: disable=too-many-instance-attributes
         # consumer
         #self.consumer = RuptelaConsumer(self)
 
-        logging.debug("rs<__init__:%d", id(self))
+        print("rs<__init__:%d", id(self))
         
     def _connection_made(self):
         """
         This method log the connection made from client.
         """
         self.peername = self.writer.get_extra_info("peername")
-        logging.debug("rs>_connection_made:%s:%d", self.peername, id(self))
+        print("rs>_connection_made:%s:%d", self.peername, id(self))
 
         self.connection_state = "connected"
         logging.info(
             "Connection from %s with %d", self.peername, id(self.consumer)
         )
 
-        logging.debug("rs<_connection_made:%s:%d", self.peername, id(self))
+        print("rs<_connection_made:%s:%d", self.peername, id(self))
 
 
 
