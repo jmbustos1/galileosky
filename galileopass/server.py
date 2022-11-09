@@ -43,7 +43,7 @@ class GalileoServer:  # pylint: disable=too-many-instance-attributes
         self.result = dict()
         self.peername = tuple()
         self.tasks_list = list()
-        self.timeout = float(os.getenv("TIMEOUT"))
+        self.timeout = ""
 
         # variables to upload cfg
         self._index_cfg_packets_list = 0
