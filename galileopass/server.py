@@ -120,6 +120,7 @@ class GalileoServer:  # pylint: disable=too-many-instance-attributes
                     data_with_timeout = await asyncio.wait_for(
                         self.reader.read(1024), timeout=5
                     )
+                    print(datetime.utcnow())
                 except asyncio.TimeoutError:
                     pass
                 else:
