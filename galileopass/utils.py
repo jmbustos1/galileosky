@@ -55,3 +55,24 @@ def check_header(data: bytes) -> bool:
         result = False
 
     return result
+
+def parser_header_payload_crc(data: bytes) -> dict:
+    """
+    This function parser header, payload and crc.
+
+    The data type it handler is bytes.
+
+    Parameters:
+        :data (bytes):
+    Returns:
+        :result (dict): Dictionary with packet_length, imei, command_id,
+                        payload, crc
+    """
+
+    header = data
+    command_id = header[0]
+    result = dict(
+        command_id=command_id,
+    )
+
+    return result

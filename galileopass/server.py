@@ -6,6 +6,7 @@ import time
 from datetime import datetime, timedelta
 from .utils import (
     check_header,
+    parser_header_payload_crc,
 )
 
 
@@ -132,9 +133,9 @@ class GalileoServer:  # pylint: disable=too-many-instance-attributes
 
                 if data and check_data:
                     await asyncio.create_task(
-                        self._response_ack()
+                        self._response_ack(self.result["command_id"])
                     )
-                    self.buffer = b""
+                    #self.buffer = b""
 
         except:
             pass
@@ -153,23 +154,28 @@ class GalileoServer:  # pylint: disable=too-many-instance-attributes
 
         result_check_header = check_header(self.buffer)
         if result_check_header:
-            return True
+            result = parser_header_payload_crc(self.buffer)
+            self.result = result
+            print(self.result["command_id"])
+            self.buffer = b""
+
         print("rs<_check_data:%s:%d", self.peername, id(self))
         return False
 
 
-    async def _response_ack(self) -> None:
+    async def _response_ack(self, command_id: int) -> None:
         """8
         This method responds to the client with an acknowledge command.
         """
         self.peername = self.writer.get_extra_info("peername")
         print("rs>_response_ack:%s:%d", self.peername, id(self))
+        if command_id == 1:
 
         # Command to response acknowledgment for extended protocol
-        pack_checksum = self.buffer[-2:]
-        confirmation_header = b'\x02'
-        confirmation_pack = confirmation_header + pack_checksum
+            pack_checksum = self.buffer[-2:]
+            confirmation_header = b'\x02'
+            confirmation_pack = confirmation_header + pack_checksum
 
-        self.writer.write(confirmation_pack)
-        await self.writer.drain()
+            self.writer.write(confirmation_pack)
+            await self.writer.drain()
 
