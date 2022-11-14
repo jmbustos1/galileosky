@@ -131,8 +131,9 @@ class GalileoServer:  # pylint: disable=too-many-instance-attributes
 
                 if data and check_data:
                     await asyncio.create_task(
-                        print(self.buffer)
+                        self._response_ack()
                     )
+
         except:
             pass
     
