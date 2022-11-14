@@ -176,9 +176,11 @@ class GalileoServer:  # pylint: disable=too-many-instance-attributes
             print("confirmation_pack 1 ")
 
             pack_checksum = self.buffer[-2:]
-            pack_sum2 = self.buffer[5] + self.buffer[6]
+            print("W1")
             confirmation_header = b'\x02'
+            print("W1")
             confirmation_pack = confirmation_header + pack_checksum
+            print("W3")
             print("confirmation_pack")
             print(confirmation_pack)
 
