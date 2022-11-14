@@ -181,6 +181,6 @@ class GalileoServer:  # pylint: disable=too-many-instance-attributes
             confirmation_pack = confirmation_header + pack_checksum
             print(f"    confirmation: {confirmation_pack}\n")
 
-            self.writer.write(confirmation_pack)
+            await self.writer.write(confirmation_pack)
             await self.writer.drain()
 
