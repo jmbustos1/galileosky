@@ -146,12 +146,12 @@ class GalileoServer:  # pylint: disable=too-many-instance-attributes
         Check Header -> Check Packet Length -> Check CRC.
         """
         self.peername = self.writer.get_extra_info("peername")
-        logging.debug("rs>_check_data:%s:%d", self.peername, id(self))
+        print("rs>_check_data:%s:%d", self.peername, id(self))
 
         result_check_header = check_header(self.buffer)
         if result_check_header:
             return True
-        logging.debug("rs<_check_data:%s:%d", self.peername, id(self))
+        print("rs<_check_data:%s:%d", self.peername, id(self))
         return False
 
 
