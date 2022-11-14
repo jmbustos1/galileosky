@@ -158,6 +158,7 @@ class GalileoServer:  # pylint: disable=too-many-instance-attributes
             self.result = result
             print(self.result["command_id"])
             self.buffer = b""
+            return True
 
         print("rs<_check_data:%s:%d", self.peername, id(self))
         return False
