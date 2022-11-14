@@ -5,13 +5,14 @@ import asyncio
 from galileopass.server import create_server
 HOST = "0.0.0.0"  # Standard loopback interface address (localhost)
 PORT = 2424  # Port to listen on (non-privileged ports are > 1023)
-
+sum = 0
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     s.bind((HOST, PORT))
     s.listen()
     print("server listening ...")
     client, addr = s.accept()
+
     with client:
         print(f"Connected by {addr}")
         while True:
@@ -26,8 +27,11 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             print(f'    hex -> {bx}, len={len(data)}')
             if not data:
                 break
+            if data:
+                sum += 1
             pack_checksum = data[-2:]
             confirmation_header = b'\x02'
             confirmation_pack = confirmation_header + pack_checksum
             print(f"    confirmation: {confirmation_pack}\n")
+            print(f"    messages: {sum}\n")
             client.sendall(confirmation_pack)
