@@ -181,8 +181,6 @@ class GalileoServer:  # pylint: disable=too-many-instance-attributes
             confirmation_pack = confirmation_header + pack_checksum
             print(confirmation_pack)
 
-            write_task = asyncio.create_task(self.writer.write(confirmation_pack))
-            await write_task
-            #self.writer.write(confirmation_pack)
+            self.writer.write(confirmation_pack)
             await self.writer.drain()
 
