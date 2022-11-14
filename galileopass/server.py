@@ -173,7 +173,7 @@ class GalileoServer:  # pylint: disable=too-many-instance-attributes
         print("rs>_response_ack:%s:%d", self.peername, id(self))
         if command_id == 1:
             print("executing confirmation package")
-
+            print("confirmation_pack 1 ")
 
             pack_checksum = self.buffer[-2:]
             pack_sum2 = self.buffer[5] + self.buffer[6]
