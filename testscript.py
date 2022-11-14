@@ -2,7 +2,7 @@ import struct
 
 
 
-data = b'\x01\x17\x80\x01\x9b\x02'
+data = b'\x01\x17\x80\x01\x9b\x02 '
 head_byte = b'\x01'
 header = data
 print(header)
