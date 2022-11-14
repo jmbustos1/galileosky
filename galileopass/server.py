@@ -119,10 +119,11 @@ class GalileoServer:  # pylint: disable=too-many-instance-attributes
                 data = b""
                 try:
                     data_with_timeout = await asyncio.wait_for(
-                        self.reader.read(1024), timeout=5
+                        self.reader.read(1024), timeout=20
                     )
                     print(datetime.utcnow())
                 except asyncio.TimeoutError:
+                    print("timeout error")
                     pass
                 else:
                     data += data_with_timeout
@@ -179,7 +180,7 @@ class GalileoServer:  # pylint: disable=too-many-instance-attributes
             confirmation_header = b'\x02'
             confirmation_pack = confirmation_header + pack_checksum
             print(f"    confirmation: {confirmation_pack}\n")
-            
+
             self.writer.write(confirmation_pack)
             await self.writer.drain()
 
