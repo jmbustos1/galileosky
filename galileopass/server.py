@@ -133,6 +133,7 @@ class GalileoServer:  # pylint: disable=too-many-instance-attributes
                     await asyncio.create_task(
                         self._response_ack()
                     )
+                    self.buffer = b""
 
         except:
             pass
