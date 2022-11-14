@@ -45,7 +45,7 @@ def check_header(data: bytes) -> bool:
         header = data
         print(header)
         print(header[0])
-        if header[0] == head_byte:
+        if header[0].encode() == head_byte:
             print("hello World")
 
         # Check header
