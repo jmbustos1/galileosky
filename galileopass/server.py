@@ -4,6 +4,9 @@ import os
 import struct
 import time
 from datetime import datetime, timedelta
+from .utils import (
+    check_header,
+)
 
 
 async def create_server(
@@ -68,14 +71,14 @@ class GalileoServer:  # pylint: disable=too-many-instance-attributes
         call
         """
         self.peername = self.writer.get_extra_info("peername")
-        logging.debug("rs>__call__:%s:%d", self.peername, id(self))
+        print("rs>__call__:%s:%d", self.peername, id(self))
 
         self._connection_made()
 
-        consumer_task = asyncio.create_task(self.consumer())
+        #consumer_task = asyncio.create_task(self.consumer())
         received_task = asyncio.create_task(self.data_received())
 
-        await asyncio.gather(received_task, consumer_task)
+        await asyncio.gather(received_task)
 
         for task in self.tasks_list:
             await task
@@ -134,10 +137,26 @@ class GalileoServer:  # pylint: disable=too-many-instance-attributes
             pass
     
     async def _check_data(self) -> bool:
-        return True
+        """
+        This method check the data sent by clients.
+
+        Close the connection when CRC is False and when
+        counter_check_data is 3.
+
+        Check Header -> Check Packet Length -> Check CRC.
+        """
+        self.peername = self.writer.get_extra_info("peername")
+        logging.debug("rs>_check_data:%s:%d", self.peername, id(self))
+
+        result_check_header = check_header(self.buffer)
+        if result_check_header:
+            return True
+        logging.debug("rs<_check_data:%s:%d", self.peername, id(self))
+        return False
+
 
     async def _response_ack(self) -> None:
-        """
+        """8
         This method responds to the client with an acknowledge command.
         """
         self.peername = self.writer.get_extra_info("peername")
