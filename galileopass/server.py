@@ -174,13 +174,13 @@ class GalileoServer:  # pylint: disable=too-many-instance-attributes
         if command_id == 1:
             print("executing confirmation package")
 
-        # Command to response acknowledgment for extended protocol
+            
             pack_checksum = self.buffer[-2:]
             pack_sum2 = self.buffer[5] + self.buffer[6]
             confirmation_header = b'\x02'
             confirmation_pack = confirmation_header + pack_checksum
-            print(f"    confirmation: {confirmation_pack}\n")
+            print(confirmation_pack)
 
-            await self.writer.write(confirmation_pack)
+            self.writer.write(confirmation_pack)
             await self.writer.drain()
 
