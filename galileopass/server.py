@@ -170,6 +170,7 @@ class GalileoServer:  # pylint: disable=too-many-instance-attributes
         self.peername = self.writer.get_extra_info("peername")
         print("rs>_response_ack:%s:%d", self.peername, id(self))
         if command_id == 1:
+            print("executing confirmation package")
 
         # Command to response acknowledgment for extended protocol
             pack_checksum = self.buffer[-2:]
