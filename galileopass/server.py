@@ -134,7 +134,7 @@ class GalileoServer:  # pylint: disable=too-many-instance-attributes
 
                 if data and check_data:
                     await asyncio.create_task(
-                        self._response_ack(self.result["command_id"])
+                        self._response_ack(self.result["command_id"], self.result["header_crc"])
                     )
                     #self.buffer = b""
 
@@ -165,7 +165,7 @@ class GalileoServer:  # pylint: disable=too-many-instance-attributes
         return False
 
 
-    async def _response_ack(self, command_id: int) -> None:
+    async def _response_ack(self, command_id: int, header_crc: bytes) -> None:
         """8
         This method responds to the client with an acknowledge command.
         """
@@ -175,8 +175,8 @@ class GalileoServer:  # pylint: disable=too-many-instance-attributes
             print("executing confirmation package")
             print("confirmation_pack 1 ")
 
-            pack_checksum = self.buffer[-2:]
-            print(self.buffer)
+            pack_checksum = header_crc
+            print(header_crc)
             print("W1")
             confirmation_header = b'\x02'
             print("W1")
