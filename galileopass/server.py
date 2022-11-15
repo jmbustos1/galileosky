@@ -47,7 +47,7 @@ class GalileoServer:  # pylint: disable=too-many-instance-attributes
         self.result = dict()
         self.peername = tuple()
         self.tasks_list = list()
-        self.timeout = ""
+        self.timeout = 120
 
         # variables to upload cfg
         self._index_cfg_packets_list = 0
@@ -119,7 +119,7 @@ class GalileoServer:  # pylint: disable=too-many-instance-attributes
                 data = b""
                 try:
                     data_with_timeout = await asyncio.wait_for(
-                        self.reader.read(1024), timeout=20
+                        self.reader.read(1024), timeout=self.timeout
                     )
                     print(datetime.utcnow())
                 except asyncio.TimeoutError:
