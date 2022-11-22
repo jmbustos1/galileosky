@@ -5,13 +5,14 @@ import logging
 import struct
 from collections import namedtuple
 from typing import Dict, List
+from data_description_dictionary import data_description
 
 #import crcmod
 
 #from .data_description_dictionary import data_description
 
-HEADER_DATA_FORMAT = ">HQB"  # Format packet_length, imei, command_id
-PACKET_LENGTH_DATA_FORMAT = ">H"  # Format pacaket length
+HEADER_DATA_FORMAT = ">BH"  # Format ID, packet_length | packet_length, imei, command_id
+PACKET_LENGTH_DATA_FORMAT = ">H"  # Format packet length | packet legth
 CRC_DATA_FORMAT = "H"  # Format CRC
 HEADER_FORMAT_IN_BYTES = ">11s"  # Format header in bytes
 FORMAT_TO_CHECK_CRC = ">QB"  # Format to pack data and check crc
@@ -70,10 +71,32 @@ def parser_header_payload_crc(data: bytes) -> dict:
     """
 
     header = data
+    # Calculate size of header
+    header_data_format_size = struct.calcsize(HEADER_DATA_FORMAT)
+
+    # Calculate size of crc
+    crc_size = struct.calcsize(CRC_DATA_FORMAT)
+
+
+    header_data_format_payload_crc = (
+        f"{HEADER_DATA_FORMAT}"
+        f"{len(data)-header_data_format_size-crc_size}s"
+        f"{CRC_DATA_FORMAT}"
+    )
+
+
+    (command_id2,packet_length ,crc) = struct.unpack(
+        header_data_format_payload_crc, data
+    )
+
+
     command_id = header[0]
     result = dict(
         command_id=command_id,
-        header_crc = data[-2:]
+        header_crc = data[-2:],
+        command_id2=command_id2,
+        crc = crc,
+        packet_length=packet_length
     )
 
     return result
