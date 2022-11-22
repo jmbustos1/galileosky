@@ -88,8 +88,8 @@ def parser_header_payload_crc(data: bytes) -> dict:
         (command_id2,packet_length ,crc) = struct.unpack(
             header_data_format_payload_crc, data
         )
-    except:
-        print(Exception)
+    except Exception as e:
+        print(e)
     print("here3")
 
     command_id = header[0]
