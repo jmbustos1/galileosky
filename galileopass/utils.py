@@ -76,19 +76,19 @@ def parser_header_payload_crc(data: bytes) -> dict:
 
     # Calculate size of crc
     crc_size = struct.calcsize(CRC_DATA_FORMAT)
-
+    print("here1")
 
     header_data_format_payload_crc = (
         f"{HEADER_DATA_FORMAT}"
         f"{len(data)-header_data_format_size-crc_size}s"
         f"{CRC_DATA_FORMAT}"
     )
-
+    print("here2")
 
     (command_id2,packet_length ,crc) = struct.unpack(
         header_data_format_payload_crc, data
     )
-
+    print("here3")
 
     command_id = header[0]
     result = dict(
@@ -98,5 +98,6 @@ def parser_header_payload_crc(data: bytes) -> dict:
         crc = crc,
         packet_length=packet_length
     )
+    print("here3")
 
     return result
