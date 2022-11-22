@@ -11,9 +11,9 @@ from .data_description_dictionary import data_description
 
 #from .data_description_dictionary import data_description
 
-HEADER_DATA_FORMAT = ">BH"  # Format ID, packet_length | packet_length, imei, command_id
-PACKET_LENGTH_DATA_FORMAT = ">H"  # Format packet length | packet legth
-CRC_DATA_FORMAT = "H"  # Format CRC
+HEADER_DATA_FORMAT = ">BH"  # Format: ID, packet_length | packet_length, imei, command_id
+PACKET_LENGTH_DATA_FORMAT = ">H"  # Format: packet length | packet legth
+CRC_DATA_FORMAT = "H"  # Format: CRC
 HEADER_FORMAT_IN_BYTES = ">11s"  # Format header in bytes
 FORMAT_TO_CHECK_CRC = ">QB"  # Format to pack data and check crc
 # Format for the "record header" for extended protocol
@@ -84,10 +84,12 @@ def parser_header_payload_crc(data: bytes) -> dict:
         f"{CRC_DATA_FORMAT}"
     )
     print("here2")
-
-    (command_id2,packet_length ,crc) = struct.unpack(
-        header_data_format_payload_crc, data
-    )
+    try:
+        (command_id2,packet_length ,crc) = struct.unpack(
+            header_data_format_payload_crc, data
+        )
+    except:
+        print(Exception)
     print("here3")
 
     command_id = header[0]
