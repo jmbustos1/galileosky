@@ -5,7 +5,7 @@ import logging
 import struct
 from collections import namedtuple
 from typing import Dict, List
-from data_description_dictionary import data_description
+from .data_description_dictionary import data_description
 
 #import crcmod
 
