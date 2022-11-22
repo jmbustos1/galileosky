@@ -6,13 +6,14 @@
 """
 # pylint: disable = too-many-lines
 data_description = {
-    "2": {
-        "description_name": "digital input 1",
-        "name": "din1",
-        "type": "unsigned",
+    "1": {
+        "description_name": "hardware version",
+        "name": "Hardware_version",
+        "type": "unsigned integer",
+        "tag":"0x01",
         "factor": None,
     },
-    "3": {
+    "2": {
         "description_name": "digital input 2",
         "name": "din2",
         "type": "unsigned",

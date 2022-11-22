@@ -158,6 +158,10 @@ class GalileoServer:  # pylint: disable=too-many-instance-attributes
             result = parser_header_payload_crc(self.buffer)
             self.result = result
             print(self.result["command_id"])
+            print(self.result["header_crc"])
+            print(self.result["command_id2"])
+            print(self.result["crc"])
+            print(self.result["packet_length"])
             self.buffer = b""
             return True
 
