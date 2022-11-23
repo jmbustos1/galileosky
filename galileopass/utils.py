@@ -93,7 +93,7 @@ def parser_header_payload_crc(data: bytes) -> dict:
     command_id = header[0]
     result = dict(
         command_id=command_id,
-        packetlenght1=data[3:4],
+        packetlenght1=data[3:5],
         header_crc = data[-2:],
         command_id2=command_id2,
         crc = crc,
