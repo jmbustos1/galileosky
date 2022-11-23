@@ -85,7 +85,7 @@ def parser_header_payload_crc(data: bytes) -> dict:
     )   
     print("here2")
 
-    (command_id2,packet_length, data_payload ,crc) = struct.unpack(
+    (command_id2,packet_length, payload ,crc) = struct.unpack(
         header_data_format_payload_crc, data
     )
     print("here3")
@@ -93,51 +93,13 @@ def parser_header_payload_crc(data: bytes) -> dict:
     command_id = header[0]
     result = dict(
         command_id=command_id,
+        packetlenght1=data[3:4],
         header_crc = data[-2:],
         command_id2=command_id2,
         crc = crc,
-        packet_length=packet_length
+        packet_length=packet_length,
+        payload=payload
     )
     print("here3")
 
     return result
-
-def parser_payload_header(command_id: int, payload: bytes) -> tuple or None:
-    """
-    This function parser the header of the payload and depending on the id of
-    the command, it returns the header and the records.
-
-    Parameters:
-        :command_id (int):
-        :payload (bytes):
-    Returns:
-        :header_payload (tuple or None): (header_payload, records)
-    """
-
-    if command_id in (1, 2):
-        # for command_id 68 or 1 the header payload is:
-        # record_left, number_records.
-
-        # Struct format for header_payload an rest data
-        format_header_payload_rest = calc_format_data_rest(">2B", payload)
-
-        # unpak header of payload an the rest data (records)
-        header_payload = struct.unpack(format_header_payload_rest, payload)
-    else:
-        header_payload = None
-
-    return header_payload
-
-def calc_format_data_rest(head_format: str, data: bytes) -> str:
-    """
-    This function returns the format indicated in 'head_format' argument with
-    the format of the rest of the data.
-
-    Parameters:
-        :head_format (str): struct format of head of data.
-        :data (bytes): data in bytes.
-    Returns:
-        :(string):
-    """
-
-    return f"{head_format}{len(data)-struct.calcsize(head_format)}s"
