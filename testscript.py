@@ -24,7 +24,9 @@ head_byte = b'\x01'
 
 
 
-data = b'\x01\x17\x80\x01\x9b\x02 \x03354762115484021\x042\x00\x85\x9e'
+#data = b'\x01\x17\x80\x01\x9b\x02 \x03354762115484021\x042\x00\x85\x9e'
+
+data = b'\x01a\x00\x03354762115484021\x042\x00\x10\x9d\x10 \xa4\xb0~c0 \x05\x18\x02\xfe\xd5\xd3\xca\xfb3\x00\x00\x00\x004\x00\x005\xff@\x00*A\xed]B\xed\x0eC)G\x00\x00\x00\x00\xc4\x00\xd4\x19\x00\x00\x00\xdb\x00\x00\x00\x00\xfe\x13\x00\x81\x00\xafd\x82\x00!N\x83\x00\xda\x02\x84\x00\x02\x00\x85\x00\xaf\xe8\xd9'
 print(len(data))
 head_byte = b'\x01'
 header = data
@@ -48,10 +50,9 @@ header_data_format_payload_crc = (
     f"{len(data)-header_data_format_size-packet_length_data_format_size-crc_size}s"
     f"{CRC_DATA_FORMAT}"
 )
-print(f"{HEADER_DATA_FORMAT}"
-      f"{PACKET_LENGTH_DATA_FORMAT}"
-      f"{len(data)-header_data_format_size-packet_length_data_format_size-crc_size}s"
-      f"{CRC_DATA_FORMAT}"
+
+
+print(header_data_format_payload_crc
     )
 print("here2")
 try:
@@ -62,9 +63,18 @@ except Exception as e:
     print(e)
 print("here3")
 
+print("pack", packet_length )
+packet_length = struct.pack(
+        '<H', packet_length
+    )
+print("pack2", packet_length )
+
+print("pack3", int.from_bytes(packet_length, "big") )
 command_id = header[0]
 result = dict(
     command_id=command_id,
+    pack= data[1:3],
+    pack_correct= data[2] + data[1],
     header_crc = data[-2:],
     command_id2=command_id2,
     crc = crc,
@@ -73,6 +83,8 @@ result = dict(
 )
 print("here3")
 print (result)
+print(result["pack"])
+print(int.from_bytes(result["pack"], "big"))
 if header[0] == int.from_bytes(head_byte, "big"):
     print("hello World")
 

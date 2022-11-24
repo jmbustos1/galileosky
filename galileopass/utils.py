@@ -88,6 +88,8 @@ def parser_header_payload_crc(data: bytes) -> dict:
     (command_id2,packet_length, payload ,crc) = struct.unpack(
         header_data_format_payload_crc, data
     )
+
+    packet_length = flip_bytes(packet_length)
     print("here3")
 
     command_id = header[0]
@@ -103,3 +105,10 @@ def parser_header_payload_crc(data: bytes) -> dict:
     print("here3")
 
     return result
+
+def flip_bytes(data: bytes) -> int:
+    data = struct.pack(
+        '<H', data
+    )
+    data = int.from_bytes(data, "big")
+    return data
