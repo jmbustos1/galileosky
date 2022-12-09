@@ -162,7 +162,7 @@ def calc_format_data_rest(head_format: str, data: bytes) -> str:
     return f"{head_format}{len(data)-struct.calcsize(head_format)}s"
 
 
-def parser_payload(command_id: int, payload: bytes) -> List[Dict] or List or None or dict:
+def parser_payload_full(command_id: int, payload: bytes) -> List[Dict] or List or None or dict:
     if command_id == 1:
 
         payload_len = len(payload)
