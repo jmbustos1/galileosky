@@ -7,6 +7,8 @@ from datetime import datetime, timedelta
 from .utils import (
     check_header,
     parser_header_payload_crc,
+    parser_payload_full,
+    interpreter,
 )
 
 
@@ -165,6 +167,14 @@ class GalileoServer:  # pylint: disable=too-many-instance-attributes
             print(self.result["packetlenght1"])
             print(self.result)
             self.buffer = b""
+            try:
+                rest = parser_payload_full(1,self.result["payload"])
+                print(rest)
+                rest2 = interpreter(rest)
+                print(rest2)
+            except Exception as e:
+                print(e)
+                pass
             return True
 
         print("rs<_check_data:%s:%d", self.peername, id(self))
