@@ -1,0 +1,20 @@
+# syntax=docker/dockerfile:1
+
+FROM debian:stable-slim as base
+LABEL maintainer="soporte@enerlink.cl"
+WORKDIR /app/
+COPY docker docker
+RUN chmod +x docker/scripts/*
+RUN docker/scripts/01-install-prod-build-deb-packages.sh
+COPY requirements.in requirements.in
+RUN docker/scripts/02-install-prod-requirements.sh
+
+FROM debian:stable-slim
+LABEL maintainer="soporte@enerlink.cl"
+WORKDIR /app/
+COPY docker docker
+RUN chmod +x docker/scripts/*
+RUN docker/scripts/03-install-prod-deb-packages.sh
+COPY --from=base /app/venv venv
+RUN docker/scripts/05-install-rds-certificate.sh
+COPY . .
